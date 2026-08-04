@@ -1,0 +1,23 @@
+pbs-client:
+  installed: true
+  repo: bookworm          # apt suite; overridden per-osfinger in osfingermap.yaml
+
+  repository: 'user@pbs!token@pbs.example.com:mydatastore'
+  password: 'pass:applications/pbs-client/password'
+  fingerprint: ''          # optional, only needed without a trusted TLS cert
+
+  backup:
+    - name: etc
+      path: /etc
+    - name: home
+      path: /home
+      exclude:
+        - '*.cache'
+        - '*/node_modules'
+
+  schedule: '0 2 * * *'    # daily at 02:00; omit to disable automatic runs
+
+  prune:
+    keep-daily: 7
+    keep-weekly: 4
+    keep-monthly: 6

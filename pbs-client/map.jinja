@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{# Start with defaults from defaults.yaml #}
+{% import_yaml 'pbs-client/defaults.yaml' as defaults %}
+{%- import_yaml "pbs-client/osfingermap.yaml" as osfingermap %}
+{% set config = salt['grains.filter_by'](
+    defaults,
+    merge = salt['grains.filter_by'](
+                osfingermap,
+                grain='osfinger',
+        merge = salt['pillar.get']('pbs-client', {}),
+    ),
+    base='pbs-client')
+%}

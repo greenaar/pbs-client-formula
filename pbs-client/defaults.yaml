@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+---
+pbs-client:
+  installed: false
+  repo: bookworm
+  # Proxmox Backup Server repository spec and API token/password.
+  # `password` is treated as a secret -- use an encrypted pillar (GPG/Vault)
+  # for it in production.
+  repository: ''
+  password: ''
+  # optional: pin the PBS server's TLS fingerprint (proxmox-backup-client
+  # prints this on first connect) instead of trusting the system CA store
+  fingerprint: ''
+  # named folder backups: [{name: ..., path: ..., exclude: [...]}]
+  backup: []
+  # cron schedule (5-field crontab expression) for automatic backups.
+  # Leave unset to only install the backup script without scheduling it.
+  # schedule: '0 2 * * *'
+  # optional: retention passed to `proxmox-backup-client prune` after each
+  # backup, e.g. {keep-daily: 7, keep-weekly: 4, keep-monthly: 6}
+  prune: {}

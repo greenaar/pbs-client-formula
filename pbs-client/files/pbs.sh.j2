@@ -1,0 +1,25 @@
+#!/bin/bash
+# File managed by Salt. Do not edit by hand.
+set -euo pipefail
+{%- from "pbs-client/map.jinja" import config with context %}
+
+# Secrets live in a separate, 0600-mode file rather than inline here.
+# shellcheck disable=SC1091
+. /etc/pbs-client/pbs-client.env
+
+# log into PBS
+proxmox-backup-client login
+
+# named folder backups
+{%- if config['backup'] is defined %}
+proxmox-backup-client backup {% for item in config['backup'] %}{{ item['name'] }}.pxar:{{ item['path'] }} {% if item['exclude'] is defined %}{% for exclude in item['exclude'] %}--exclude={{ exclude }} {% endfor %}{% endif %}{% endfor %}
+{%- endif %}
+
+{%- if config.prune %}
+
+# retention
+proxmox-backup-client prune {% for key, value in config.prune.items() %}--{{ key }} {{ value }} {% endfor %}
+{%- endif %}
+
+unset PBS_REPOSITORY
+unset PBS_PASSWORD
